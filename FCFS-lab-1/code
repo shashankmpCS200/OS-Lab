@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<malloc.h>
+#include<string.h>
+
+struct node{
+    char name[2];
+    int arrivalTime;
+    int burstTime;
+    struct node* link;
+};
+typedef struct node node;
+node* start=NULL;
+
+
+void insert(){
+    char str[2];
+    int bt,at;
+    node* newTask=(node*)malloc(sizeof(node));
+    printf("Enter the name,arrival time(min) and burst time(min)\n");
+    scanf("%s %d %d",str,&at,&bt);
+    strcpy(newTask->name,str);
+    newTask->arrivalTime=at;
+    newTask->burstTime=bt;
+
+    if(start==NULL){
+        start=newTask;
+        newTask->link=NULL;
+    }else{
+        node* temp=start;
+
+        while(temp->link!=NULL){
+            temp=temp->link;
+        }
+        temp->link=newTask;
+        newTask->link=NULL;
+    }
+}
+
+void display(){
+    int totalTime=0;
+    int totalTAT=0;
+    int totalWT=0;
+    int count=0;
+    if(start==NULL){
+        printf("No task present\n");
+    }else{
+
+        node* cur=start;
+        int waitingTime;
+        int turnAroundTime;
+
+
+
+        while(cur!=NULL){
+            count++;
+            totalTime+=cur->burstTime;
+            turnAroundTime=totalTime-cur->arrivalTime;
+            waitingTime=turnAroundTime-cur->burstTime;
+            printf("%s(waitingTime %d,turnAroundTime %d)->",cur->name,waitingTime,turnAroundTime);
+
+            totalTAT+=turnAroundTime;
+            totalWT+=waitingTime;
+            cur=cur->link;
+        }
+
+    }
+    printf("\nAverage turn around time %d and average waiting time %d\n",totalTAT/count,totalWT/count);
+}
+
+int main(){
+    int ch;
+    while(1){
+        printf("Enter your choice\n");
+        printf("1.Insert 2.Display waiting and turn around time 3.Exit\n");
+        scanf("%d",&ch);
+        switch(ch){
+        case 1: insert();
+                break;
+        case 2: display();
+                break;
+        case 3: break;
+        default: printf("Invalid input\n");
+
+        }
+    }
+}
