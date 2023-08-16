@@ -67,7 +67,7 @@ void scanFunction(int arr[],int n,int head,int low,int high){
     }else{
         ans+=head-low;
         ans+=arr[n-1]-low;
-         printf("SCAN while moving right : %d\n",ans);
+         printf("SCAN while moving left : %d\n",ans);
     }
 
 }
@@ -87,7 +87,7 @@ void cscanFunction(int arr[],int n,int head,int low,int high){
         ans+=head-low;
         while(arr[i]<head) i++;
         ans+=high-arr[i];
-         printf("C-SCAN while moving right : %d\n",ans);
+         printf("C-SCAN while moving left : %d\n",ans);
     }
 }
 void lookFunction(int arr[],int n,int head,int low,int high){
@@ -99,11 +99,11 @@ void lookFunction(int arr[],int n,int head,int low,int high){
     if(ch==2){
         ans+=arr[n-1]-head;
         ans+=arr[n-1]-arr[0];
-        printf("SCAN while moving right : %d\n",ans);
+        printf("LOOK while moving right : %d\n",ans);
     }else{
         ans+=head-arr[0];
         ans+=arr[n-1]-arr[0];
-         printf("SCAN while moving right : %d\n",ans);
+         printf("LOOK while moving left : %d\n",ans);
     }
 }
 
@@ -117,12 +117,12 @@ void clookFunction(int arr[],int n,int head,int low,int high){
         ans+=arr[n-1]-head;
         while(arr[i]<head) i++;
         ans+=arr[i-1]-arr[0];
-        printf("SCAN while moving right : %d\n",ans);
+        printf("C-LOOK while moving right : %d\n",ans);
     }else{
         ans+=head-arr[0];
         while(arr[i]<head) i++;
         ans+=arr[n-1]-arr[i];
-        printf("SCAN while moving right : %d\n",ans);
+        printf("C-LOOK while moving left : %d\n",ans);
     }
 }
 
