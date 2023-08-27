@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX_FILES 100
+#define MAX_FILE_NAME 20
+struct File
+{
+    char name[MAX_FILE_NAME];
+    int startBlock;
+    int length;
+};
+struct File fileTable[MAX_FILES];
+int totalFiles = 0;
+int currentBlock = 0;
+
+void allocateSequential(char *fileName, int length)
+{
+    if (currentBlock + length <= MAX_FILES)
+    {
+        strcpy(fileTable[totalFiles].name, fileName);
+        fileTable[totalFiles].startBlock = currentBlock;
+        fileTable[totalFiles].length = length;
+        currentBlock += length;
+        totalFiles++;
+        printf("\n>>>File %s allocated sequentially from block %d to %d.\n", fileName, fileTable[totalFiles - 1].startBlock, currentBlock - 1);
+    }
+    else
+    {
+        printf("\nNot enough space for file allocation.\n");
+    }
+}
+
+int main()
+{
+    int numFiles;
+    printf("Enter the number of files: ");
+    scanf("%d", &numFiles);
+    for (int i = 0; i < numFiles; i++)
+    {
+        char fileName[MAX_FILE_NAME];
+        int fileLength;
+        printf("\nEnter the name of file %d: ", i + 1);
+        scanf("%s", fileName);
+        printf("Enter the length of file %d: ", i + 1);
+        scanf("%d", &fileLength);
+        allocateSequential(fileName, fileLength);
+    }
+    return 0;
+}
