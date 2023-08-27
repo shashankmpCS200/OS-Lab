@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_FILES 100
+#define MAX_FILE_NAME 20
+#define MAX_BLOCKS 100
+
+struct File {
+    char name[MAX_FILE_NAME];
+    int indexBlock;
+    int length;
+};
+
+struct File fileTable[MAX_FILES];
+int totalFiles = 0;
+int currentBlock = 0;
+int freeBlocks[MAX_BLOCKS]; // List of free blocks
+
+void initializeFreeBlocks() {
+    for (int i = 0; i < MAX_BLOCKS; i++) {
+        freeBlocks[i] = 1;
+    }
+}
+
+int allocateBlock() {
+    for (int i = 0; i < MAX_BLOCKS; i++) {
+        if (freeBlocks[i]) {
+            freeBlocks[i] = 0;
+            return i;
+        }
+    }
+    return -1; // No free block available
+}
+
+void allocateIndexed(char *fileName, int length) {
+    if (totalFiles < MAX_FILES) {
+        strcpy(fileTable[totalFiles].name, fileName);
+        fileTable[totalFiles].indexBlock = allocateBlock();
+        fileTable[totalFiles].length = length;
+
+        if (fileTable[totalFiles].indexBlock != -1) {
+            printf(">>>File %s allocated with index block %d\n", fileName, fileTable[totalFiles].indexBlock);
+
+            for (int i = 0; i < length; i++) {
+                int dataBlock = allocateBlock();
+                if (dataBlock != -1) {
+                    printf(">Data block %d allocated for %s\n", dataBlock, fileName);
+                } else {
+                    printf("Not enough space for data block allocation.\n");
+                    break;
+                }
+            }
+            totalFiles++;
+        } else {
+            printf("\nNot enough space for index block allocation.\n");
+        }
+    } else {
+        printf("\nFile table is full.\n");
+    }
+}
+
+int main() {
+    initializeFreeBlocks();
+    int numFiles;
+    printf("Enter the number of files: ");
+    scanf("%d", &numFiles);
+
+    for (int i = 0; i < numFiles; i++) {
+        char fileName[MAX_FILE_NAME];
+        int fileLength;
+        
+        printf("\nEnter the name of file %d: ", i + 1);
+        scanf("%s", fileName);
+        printf("Enter the length of file %d: ", i + 1);
+        scanf("%d", &fileLength);
+
+        allocateIndexed(fileName, fileLength);
+    }
+
+    return 0;
+}
