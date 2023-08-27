@@ -1,0 +1,134 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct File
+{
+    char name[50];
+};
+
+struct Directory
+{
+    char name[50];
+    struct File files[100];
+    int fileCount;
+    struct Directory *subdirectories[10];
+    int subdirCount;
+};
+
+void createSubdirectory(struct Directory *parentDir)
+{
+    if (parentDir->subdirCount < 10)
+    {
+        struct Directory *subDir = (struct Directory *)malloc(sizeof(struct Directory));
+        printf("Enter subdirectory name: ");
+        scanf("%s", subDir->name);
+        subDir->fileCount = 0;
+        subDir->subdirCount = 0;
+        parentDir->subdirectories[parentDir->subdirCount] = subDir;
+        parentDir->subdirCount++;
+        printf("Subdirectory created.\n");
+    }
+    else
+    {
+        printf("Subdirectory limit reached.\n");
+    }
+}
+
+int main()
+{
+    struct Directory rootDir;
+    strcpy(rootDir.name, "Root");
+    rootDir.fileCount = 0;
+    rootDir.subdirCount = 0;
+
+    int choice;
+    printf("\nHierarchical Directory\n");
+    printf("1. Create Subdirectory\n");
+    printf("2. Create File\n");
+    printf("3. List Files and Directories\n");
+    printf("4. Exit\n");
+    do
+    {
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            createSubdirectory(&rootDir);
+            break;
+        case 2:
+            printf("Enter directory name: ");
+            char dirName[50];
+            scanf("%s", dirName);
+
+            struct Directory *targetDir = NULL;
+            for (int i = 0; i < rootDir.subdirCount; i++)
+            {
+                if (strcmp(rootDir.subdirectories[i]->name, dirName) == 0)
+                {
+                    targetDir = rootDir.subdirectories[i];
+                    break;
+                }
+            }
+
+            if (targetDir != NULL)
+            {
+                if (targetDir->fileCount < 100)
+                {
+                    printf("Enter file name: ");
+                    scanf("%s", targetDir->files[targetDir->fileCount].name);
+                    targetDir->fileCount++;
+                    printf("File created.\n");
+                }
+                else
+                {
+                    printf("Directory is full.\n");
+                }
+            }
+            else
+            {
+                printf("Directory not found.\n");
+            }
+            break;
+        case 3:
+            printf("Files and subdirectories:\n");
+            printf("Root:\n");
+            for (int i = 0; i < rootDir.subdirCount; i++)
+            {
+                printf("  %s (directory)\n", rootDir.subdirectories[i]->name);
+
+                for (int j = 0; j < rootDir.subdirectories[i]->fileCount; j++)
+                {
+                    printf("    %s (file)\n", rootDir.subdirectories[i]->files[j].name);
+                }
+            }
+            for (int i = 0; i < rootDir.fileCount; i++)
+            {
+                printf("  %s (file)\n", rootDir.files[i].name);
+            }
+            break;
+        case 4:
+            printf("Exiting...\n");
+            break;
+        default:
+            printf("Invalid choice.\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
