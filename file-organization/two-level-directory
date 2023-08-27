@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct File
+{
+    char name[50];
+};
+
+struct UserDirectory
+{
+    char name[50];
+    struct File files[100];
+    int fileCount;
+};
+
+struct RootDirectory
+{
+    struct UserDirectory users[10];
+    int userCount;
+};
+
+int main()
+{
+    struct RootDirectory rootDir;
+    rootDir.userCount = 0;
+
+    int choice;
+    printf("\nTwo Level Directory\n");
+    printf("1. Create User Directory\n");
+    printf("2. Create File\n");
+    printf("3. List Files\n");
+    printf("4. Exit\n");
+    do
+    {
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            if (rootDir.userCount < 10)
+            {
+                printf("Enter user name: ");
+                scanf("%s", rootDir.users[rootDir.userCount].name);
+                rootDir.users[rootDir.userCount].fileCount = 0;
+                rootDir.userCount++;
+                printf(">User directory created.\n");
+            }
+            else
+            {
+                printf(">User directory limit reached.\n");
+            }
+            break;
+        case 2:
+            if (rootDir.userCount > 0)
+            {
+                printf("Enter user index: ");
+                int userIndex;
+                scanf("%d", &userIndex);
+                if (userIndex >= 0 && userIndex < rootDir.userCount)
+                {
+                    struct UserDirectory *userDir = &rootDir.users[userIndex];
+                    if (userDir->fileCount < 100)
+                    {
+                        printf("Enter file name: ");
+                        scanf("%s", userDir->files[userDir->fileCount].name);
+                        userDir->fileCount++;
+                        printf(">File created.\n");
+                    }
+                    else
+                    {
+                        printf(">User directory is full.\n");
+                    }
+                }
+                else
+                {
+                    printf(">Invalid user index.\n");
+                }
+            }
+            else
+            {
+                printf(">No user directories available.\n");
+            }
+            break;
+        case 3:
+            printf("Files in user directories:\n");
+            for (int i = 0; i < rootDir.userCount; i++)
+            {
+                struct UserDirectory *userDir = &rootDir.users[i];
+                printf("User: %s\n", userDir->name);
+                for (int j = 0; j < userDir->fileCount; j++)
+                {
+                    printf("  %s\n", userDir->files[j].name);
+                }
+            }
+            break;
+        case 4:
+            printf("Exiting...\n");
+            break;
+        default:
+            printf("Invalid choice.\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+
+
